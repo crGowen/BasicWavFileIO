@@ -6,15 +6,15 @@ namespace wavio
 	class WavHeader
 	{
 	public:
-		std::string groupID;
+		char groupID[4]; // always "RIFF"
 		unsigned int length;
-		std::string typeRFF;
+		char typeRIFF[4]; // always "WAVE"
 	};
 
 	class FormatChunk
 	{
 	public:
-		std::string chunkID;
+		char chunkID[4]; // ALWAYS "fmt " for FormatChunk
 		unsigned int chunkSize;
 		unsigned short formatType;
 		unsigned short nChannels;
@@ -27,7 +27,7 @@ namespace wavio
 	class DataChunk
 	{
 	public:
-		std::string chunkID;
+		char chunkID[4]; // ALWAYS "data" for FormatChunk
 		unsigned int chunkSize;
 		unsigned char* uDataArray; //unsigned data / char 8bit
 		short* sDataArray; //signed data / short 16bit
@@ -40,7 +40,6 @@ namespace wavio
 		WavHeader head;
 		FormatChunk fmt;
 		DataChunk data;
-		std::string fileName;
 
 		static void ConstructFromFinstream(WavFileData wavfile, const char* filepath)
 		{

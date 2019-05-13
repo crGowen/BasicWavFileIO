@@ -24,9 +24,18 @@ namespace wavio
 		std::cout << "Group ID: " << this->head.groupID[0] << this->head.groupID[1] << this->head.groupID[2] << this->head.groupID[3] << std::endl
 			<< "File Bytes ( -8): " << this->head.fileBytes << std::endl
 			<< "Type RIFF: " << this->head.typeRIFF[0] << this->head.typeRIFF[1] << this->head.typeRIFF[2] << this->head.typeRIFF[3] << std::endl << std::endl
+
 			<< "Format ID: " << this->head.fmtID[0] << this->head.fmtID[1] << this->head.fmtID[2] << this->head.fmtID[3] << std::endl
+			<< "Format Size: " << this->head.fmtSize << std::endl
 			<< "Format Type: " << this->head.formatType << std::endl
-			<< "Number of Channels: " << this->head.nChannels << std::endl;
+			<< "Number of Channels: " << this->head.nChannels << std::endl
+			<< "Sample Freq: " << this->head.sampleFreq << std::endl
+			<< "Est. Bytes Freq: " << this->head.estBytesFreq << std::endl
+			<< "Sample Frame Size: " << this->head.sampleFrameSize << std::endl
+			<< "Bits Per Sample: " << this->head.bitsPerSample << std::endl << std::endl
+
+			<< "Chunk ID: " << this->head.chunkID[0] << this->head.chunkID[1] << this->head.chunkID[2] << this->head.chunkID[3] << std::endl
+			<< "Chunk Size (Bytes): " << this->head.chunkSize;
 	}
 }
 

@@ -1,0 +1,6 @@
+﻿  stdafx.cpp
+  Source.cpp
+c:\users\carl\source\repos\basicwavfileio\basicwavfileio\basicwavfileio.h(19): error C2086: 'char wavio::WavHeader::chunkID[4]': redefinition
+  c:\users\carl\source\repos\basicwavfileio\basicwavfileio\basicwavfileio.h(11): note: see declaration of 'wavio::WavHeader::chunkID'
+c:\users\carl\source\repos\basicwavfileio\basicwavfileio\basicwavfileio.h(20): error C2086: 'unsigned int wavio::WavHeader::chunkSize': redefinition
+  c:\users\carl\source\repos\basicwavfileio\basicwavfileio\basicwavfileio.h(12): note: see declaration of 'wavio::WavHeader::chunkSize'

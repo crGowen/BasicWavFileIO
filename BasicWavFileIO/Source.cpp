@@ -1,51 +1,32 @@
 #include "stdafx.h"
 #include <string>
+#include <iostream>
+#include <fstream>
+
+#include "basicwavfileio.h"
 
 namespace wavio
 {
-	class WavHeader
-	{
-	public:
-		char groupID[4]; // always "RIFF"
-		unsigned int fileBytes; // size of file in minus 8 bytes
-		char typeRIFF[4]; // always "WAVE"
-	}; //sizeof should return 12 bytes
-
-	class FormatChunk
-	{
-	public:
-		char chunkID[4]; // ALWAYS "fmt " for FormatChunk
-		unsigned int chunkSize;
-		unsigned short formatType;
-		unsigned short nChannels; 
-		unsigned int samplesFreq;
-		unsigned int estBytesFreq;
-		unsigned short sampleFrameSize;
-		unsigned int bitsPerSample; // padded by 2 bytes to the 24th byte in Format chunk (total size of chunk is 28bytes).
-	}; // size of should return 28bytes
-
-	class DataChunk
-	{
-	public:
-		char chunkID[4]; // ALWAYS "data" for FormatChunk
-		unsigned int chunkSize;
-		unsigned char* byteDataArray; //unsigned data / char 8bit (perhaps with 16bit data, skip all even bytes to get the 2 least signifs from 16 bit data chunks)
-		// padding isn't an issue here, because when writing the data chunk we'll write the first two vars first, then since the byteDataArray is dynamic memory, write it 1 byte at a time
-		// so we don't write DataChunk to a file, we write chunkID, chunkSize, then byteDataArray (however big it will be)
-	}; // sizeof should return 16 bytes (8 of which are the just the 64b pointer).
-
-	// KEEP IT SIMPLE, it needs to be pure P.O.D.
-	class WavFileData
-	{
-	public:
-		WavHeader head;
-		FormatChunk fmt;
-		DataChunk data;
-
-		static void ConstructFromFinstream(WavFileData wavfile, const char* filepath)
+	void WavFileData::ConstructFromFinstream(WavFileData &wavfile, std::string filepath)
 		{
-			//stub
+			std::ifstream finstream;
+			finstream.open(filepath, std::ios::binary);
+			finstream.read((char*)&wavfile.head, sizeof(WavHeader));
+
+			finstream.seekg(sizeof(WavHeader), std::ios::beg);
+			wavfile.byteDataArray = new char[wavfile.head.chunkSize];
+			finstream.read((char*)&wavfile.byteDataArray[0], sizeof(wavfile.head.chunkSize));
+			finstream.close();
 		}
-	};
+
+	void WavFileData::PrintInfo()
+	{
+		std::cout << "Group ID: " << this->head.groupID[0] << this->head.groupID[1] << this->head.groupID[2] << this->head.groupID[3] << std::endl
+			<< "File Bytes ( -8): " << this->head.fileBytes << std::endl
+			<< "Type RIFF: " << this->head.typeRIFF[0] << this->head.typeRIFF[1] << this->head.typeRIFF[2] << this->head.typeRIFF[3] << std::endl << std::endl
+			<< "Format ID: " << this->head.fmtID[0] << this->head.fmtID[1] << this->head.fmtID[2] << this->head.fmtID[3] << std::endl
+			<< "Format Type: " << this->head.formatType << std::endl
+			<< "Number of Channels: " << this->head.nChannels << std::endl;
+	}
 }
 

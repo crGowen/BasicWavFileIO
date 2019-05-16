@@ -27,10 +27,16 @@ namespace wavio
 	{
 	public:
 		WavHeader head;
-		char* byteDataArray;
+		char* byteDataArray; // for 8 bit data
+		short* shortDataArray; // for 16bit data
+		float* floatDataArray; // for 32bit data
 
-		static __declspec(dllexport) void ConstructFromFinstream(WavFileData &wavfile, std::string filepath);
+		__declspec(dllexport) void ConstructFromFinstream(std::string filepath);
+
+		static __declspec(dllexport) void OutputWavObjToFile(WavFileData &wavfile, std::string filepath);
 
 		__declspec(dllexport) void PrintInfo();
+
+		__declspec(dllexport) void DestroyDynamicVars();
 	};
 }

@@ -16,11 +16,11 @@ namespace wavio
 		unsigned int sampleFreq;
 		unsigned int estBytesFreq;
 		unsigned short sampleFrameSize;
-		unsigned short bitsPerSample; // padded by 2 bytes to the 24th byte in Format chunk (total size of chunk is 28bytes).
+		unsigned short bitsPerSample;
 
 		char chunkID[4]; // ALWAYS "data" for FormatChunk
 		unsigned int chunkSize;
-	}; // size of should return 48bytes
+	}; // sizeof(WavHeader) should return 44bytes
 
 	// KEEP IT SIMPLE, it needs to be pure P.O.D.
 	class WavFileData
@@ -34,8 +34,6 @@ namespace wavio
 		__declspec(dllexport) void ConstructFromFinstream(std::string filepath);
 
 		__declspec(dllexport) void CrushBits();
-
-		__declspec(dllexport) void CrushBits(unsigned short killBits);
 
 		static __declspec(dllexport) void OutputWavObjToFile(WavFileData &wavfile, std::string filepath);
 

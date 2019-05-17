@@ -24,18 +24,41 @@ namespace wavio
 				this->shortDataArray = new short[this->head.chunkSize / 2];
 				finstream.read((char*)&this->shortDataArray[0], this->head.chunkSize);
 				break;
-			case 32:
-				this->floatDataArray = new float[this->head.chunkSize / 4];
-				finstream.read((char*)&this->floatDataArray[0], this->head.chunkSize);
-				break;
 			default:
 				//throw exception
-				std::cout << "EXCEPTION!";
 				break;
 			}
 			
 			finstream.close();
 		}
+
+	// 16bits - 8bits only
+	void WavFileData::CrushBits()
+	{
+		this->byteDataArray = new char[this->head.chunkSize/2];
+
+		bool sign; //true - , false +
+		for (int i = 0; i < this->head.chunkSize / 2; i++)
+		{
+			if (this->shortDataArray[i] < 0)
+				sign = true;
+			else
+				sign = false;
+			this->shortDataArray[i] = abs(this->shortDataArray[i]) - (abs(this->shortDataArray[i]) % 256);
+			this->shortDataArray[i] = this->shortDataArray[i] / 256;
+			if (sign)
+				this->shortDataArray[i] = this->shortDataArray[i] * (-1);
+			this->byteDataArray[i] = this->shortDataArray[i];
+		}
+
+		delete[] this->shortDataArray;
+
+		this->head.chunkSize = this->head.chunkSize / 2;
+		this->head.fileBytes = sizeof(WavHeader) + this->head.chunkSize - 8;
+		this->head.bitsPerSample = 8;
+		this->head.estBytesFreq = this->head.estBytesFreq / 2;
+		this->head.sampleFrameSize = this->head.sampleFrameSize / 2;
+	}
 
 	void WavFileData::OutputWavObjToFile(WavFileData &wavfile, std::string filepath)
 	{
@@ -50,12 +73,8 @@ namespace wavio
 		case 16:
 			foutstream.write((char*)&wavfile.shortDataArray[0], wavfile.head.chunkSize);
 			break;
-		case 32:
-			foutstream.write((char*)&wavfile.floatDataArray[0], wavfile.head.chunkSize);
-			break;
 		default:
 			//throw exception
-			std::cout << "exceptioN!";
 			break;
 		}
 		foutstream.close();
@@ -87,18 +106,54 @@ namespace wavio
 			switch (this->head.bitsPerSample)
 			{
 			case 8:
-				delete[] byteDataArray;
+				delete[] this->byteDataArray;
 				break;
 			case 16:
-				delete[] shortDataArray;
-				break;
-			case 32:
-				delete[] floatDataArray;
+				delete[] this->shortDataArray;
 				break;
 			default:
 				//throw exception
 				break;
 			}
+		}
+	}
+
+	void WavFileData::SilenceChannel(char channelToSilence)
+	{
+		unsigned short offset;
+
+		switch(channelToSilence)
+		{
+		case 'L':
+		case 'l':
+			offset = 0;
+			break;
+		default:
+			offset = 1;
+			break;
+		}
+		
+		switch (this->head.bitsPerSample)
+		{
+		case 8:
+			for (int i = 0; i < this->head.chunkSize; i++)
+			{
+				if ((i + offset) % 2 == 0)
+					this->byteDataArray[i] = 0;
+			}
+			break;
+		case 16:
+			for (int i = 0; i < this->head.chunkSize/2; i++)
+			{
+				if ((i + offset) % 2 == 0)
+				{
+					this->shortDataArray[i] = 0;
+				}
+			}
+			break;
+		default:
+			//throw exception
+			break;
 		}
 	}
 }

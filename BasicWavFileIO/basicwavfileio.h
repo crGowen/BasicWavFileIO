@@ -29,14 +29,21 @@ namespace wavio
 		WavHeader head;
 		char* byteDataArray; // for 8 bit data
 		short* shortDataArray; // for 16bit data
-		float* floatDataArray; // for 32bit data
+		// 32bit file types not supported
 
 		__declspec(dllexport) void ConstructFromFinstream(std::string filepath);
+
+		__declspec(dllexport) void CrushBits();
+
+		__declspec(dllexport) void CrushBits(unsigned short killBits);
 
 		static __declspec(dllexport) void OutputWavObjToFile(WavFileData &wavfile, std::string filepath);
 
 		__declspec(dllexport) void PrintInfo();
 
 		__declspec(dllexport) void DestroyDynamicVars();
+
+		__declspec(dllexport) void SilenceChannel(char channelToSilence);
+
 	};
 }

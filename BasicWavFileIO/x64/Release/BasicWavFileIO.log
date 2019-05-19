@@ -1,7 +1,4 @@
 ﻿  stdafx.cpp
   Source.cpp
-c:\users\carl\source\repos\basicwavfileio\basicwavfileio\source.cpp(41): warning C4018: '<': signed/unsigned mismatch
-c:\users\carl\source\repos\basicwavfileio\basicwavfileio\source.cpp(51): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
-c:\users\carl\source\repos\basicwavfileio\basicwavfileio\source.cpp(139): warning C4018: '<': signed/unsigned mismatch
-c:\users\carl\source\repos\basicwavfileio\basicwavfileio\source.cpp(146): warning C4018: '<': signed/unsigned mismatch
+c:\users\carl\source\repos\basicwavfileio\basicwavfileio\source.cpp(101): warning C4018: '<': signed/unsigned mismatch
   BasicWavFileIO.vcxproj -> C:\Users\Carl\source\repos\BasicWavFileIO\x64\Release\BasicWavFileIO.lib

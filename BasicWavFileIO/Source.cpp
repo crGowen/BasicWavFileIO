@@ -16,12 +16,8 @@ namespace wavio
 			finstream.seekg(sizeof(WavHeader), std::ios::beg);
 			switch (this->head.bitsPerSample)
 			{
-			case 8:
-				this->byteDataArray = new char[this->head.chunkSize];
-				finstream.read((char*)&this->byteDataArray[0], this->head.chunkSize);
-				break;
 			case 16:
-				this->shortDataArray = new short[this->head.chunkSize / 2];
+				this->shortDataArray = new unsigned short[this->head.chunkSize / 2];
 				finstream.read((char*)&this->shortDataArray[0], this->head.chunkSize);
 				break;
 			default:
@@ -32,34 +28,6 @@ namespace wavio
 			finstream.close();
 		}
 
-	// 16bits - 8bits only
-	void WavFileData::CrushBits()
-	{
-		this->byteDataArray = new char[this->head.chunkSize/2];
-
-		bool sign; //true - , false +
-		for (int i = 0; i < this->head.chunkSize / 2; i++)
-		{
-			if (this->shortDataArray[i] < 0)
-				sign = true;
-			else
-				sign = false;
-			this->shortDataArray[i] = abs(this->shortDataArray[i]) - (abs(this->shortDataArray[i]) % 256);
-			this->shortDataArray[i] = this->shortDataArray[i] / 256;
-			if (sign)
-				this->shortDataArray[i] = this->shortDataArray[i] * (-1);
-			this->byteDataArray[i] = this->shortDataArray[i];
-		}
-
-		delete[] this->shortDataArray;
-
-		this->head.chunkSize = this->head.chunkSize / 2;
-		this->head.fileBytes = sizeof(WavHeader) + this->head.chunkSize - 8;
-		this->head.bitsPerSample = 8;
-		this->head.estBytesFreq = this->head.estBytesFreq / 2;
-		this->head.sampleFrameSize = this->head.sampleFrameSize / 2;
-	}
-
 	void WavFileData::OutputWavObjToFile(WavFileData &wavfile, std::string filepath)
 	{
 		std::ofstream foutstream;
@@ -67,9 +35,6 @@ namespace wavio
 		foutstream.write((char*)&wavfile.head, sizeof(WavHeader));
 		switch (wavfile.head.bitsPerSample)
 		{
-		case 8:
-			foutstream.write((char*)&wavfile.byteDataArray[0], wavfile.head.chunkSize);
-			break;
 		case 16:
 			foutstream.write((char*)&wavfile.shortDataArray[0], wavfile.head.chunkSize);
 			break;
@@ -105,9 +70,6 @@ namespace wavio
 		{
 			switch (this->head.bitsPerSample)
 			{
-			case 8:
-				delete[] this->byteDataArray;
-				break;
 			case 16:
 				delete[] this->shortDataArray;
 				break;
@@ -135,13 +97,6 @@ namespace wavio
 		
 		switch (this->head.bitsPerSample)
 		{
-		case 8:
-			for (int i = 0; i < this->head.chunkSize; i++)
-			{
-				if ((i + offset) % 2 == 0)
-					this->byteDataArray[i] = 0;
-			}
-			break;
 		case 16:
 			for (int i = 0; i < this->head.chunkSize/2; i++)
 			{

@@ -30,7 +30,7 @@ namespace wavio
 		unsigned short* shortDataArray; // for 16bit data
 		// 32bit file types not supported
 
-		__declspec(dllexport) void ConstructFromFinstream(std::string filepath);
+		__declspec(dllexport) bool ConstructFromFinstream(std::string filepath);
 
 		static __declspec(dllexport) void OutputWavObjToFile(WavFileData &wavfile, std::string filepath);
 

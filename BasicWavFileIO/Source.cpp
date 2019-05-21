@@ -7,7 +7,7 @@
 
 namespace wavio
 {
-	void WavFileData::ConstructFromFinstream(std::string filepath)
+	bool WavFileData::ConstructFromFinstream(std::string filepath)
 		{
 			std::ifstream finstream;
 			finstream.open(filepath, std::ios::binary);
@@ -26,6 +26,11 @@ namespace wavio
 			}
 			
 			finstream.close();
+
+			if (this->head.chunkID[0] == 'd' && this->head.chunkID[3] == 'a' && this->head.chunkSize >= 4)
+				return true;
+			else
+				return false;
 		}
 
 	void WavFileData::OutputWavObjToFile(WavFileData &wavfile, std::string filepath)

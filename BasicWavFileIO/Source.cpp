@@ -27,7 +27,7 @@ namespace wavio
 			
 			finstream.close();
 
-			if (this->head.chunkID[0] == 'd' && this->head.chunkID[3] == 'a' && this->head.chunkSize >= 4)
+			if (this->head.chunkID[0] == 'd' && this->head.chunkID[3] == 'a' && this->head.chunkSize >= 4 && this->head.bitsPerSample==16)
 				return true;
 			else
 				return false;

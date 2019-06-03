@@ -33,15 +33,15 @@ namespace wavio
 				return false;
 		}
 
-	void WavFileData::OutputWavObjToFile(WavFileData &wavfile, std::string filepath)
+	void WavFileData::OutputWavObjToFile(std::string filepath)
 	{
 		std::ofstream foutstream;
 		foutstream.open(filepath, std::ios::binary);
-		foutstream.write((char*)&wavfile.head, sizeof(WavHeader));
-		switch (wavfile.head.bitsPerSample)
+		foutstream.write((char*)&this->head, sizeof(WavHeader));
+		switch (this->head.bitsPerSample)
 		{
 		case 16:
-			foutstream.write((char*)&wavfile.shortDataArray[0], wavfile.head.chunkSize);
+			foutstream.write((char*)&this->shortDataArray[0], this->head.chunkSize);
 			break;
 		default:
 			//throw exception

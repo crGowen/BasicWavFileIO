@@ -32,7 +32,7 @@ namespace wavio
 
 		__declspec(dllexport) bool ConstructFromFinstream(std::string filepath);
 
-		static __declspec(dllexport) void OutputWavObjToFile(WavFileData &wavfile, std::string filepath);
+		__declspec(dllexport) void OutputWavObjToFile(std::string filepath);
 
 		__declspec(dllexport) void PrintInfo();
 
